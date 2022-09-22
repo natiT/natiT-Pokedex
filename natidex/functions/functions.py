@@ -52,26 +52,27 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         api_return['name'] = pkmn_local_name
     lang_types = []
     for type in api_return['types']:
-        # print(type['type']['name'])
-        # print(type['type']['name'])
-        #print(get_type_lang_from_pokeapi(type['type']['name'], lang_name))
-        #temp = get_type_lang_from_pokeapi(type['type']['name'], lang_name)
-        # print(temp)
+
         lang_types.append(get_type_lang_from_pokeapi(
             type['type']['name'], lang_name))
     api_return['types'] = ' | '.join(lang_types)
 
     lang_abilities = []
     for ability in api_return['abilities']:
-        # print(type['type']['name'])
-        # print(type['type']['name'])
-        #print(get_type_lang_from_pokeapi(type['type']['name'], lang_name))
-        #temp = get_type_lang_from_pokeapi(type['type']['name'], lang_name)
-        # print(temp)
+
         lang_abilities.append(get_ability_lang_from_pokeapi(
             ability['ability']['name'], lang_name))
     api_return['abilities'] = ' | '.join(lang_abilities)
-    
+
+    lang_stats = []
+    i = 0
+    for stat in api_return['stats']:
+        temp_stat_lang = get_stats_lang_from_pokeapi(stat['stat']['name'], lang_name)
+        return_stat = f"{temp_stat_lang}: " + str(stat["base_stat"])
+        lang_stats.append(return_stat)
+
+    api_return['stats'] = ' | '.join(lang_stats)
+
     pkmn_class = pokemon(
         api_return['id'],
         api_return['name'],
@@ -97,6 +98,13 @@ def get_ability_lang_from_pokeapi(ability, langname):
             temp = name['name']
             return (temp)
 
+
+def get_stats_lang_from_pokeapi(stat, langname):
+    stat_langs = get_from_pokeapi("stat", stat)
+    for name in stat_langs['names']:
+        if name['language']['name'] == langname:
+            temp = name['name']
+            return (temp)
 
 
 def get_lang_name_from_id(id):

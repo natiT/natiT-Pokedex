@@ -38,7 +38,7 @@ async def read_pokemon(pokemon):
     #print(pkmn_id)
     #return(pkmn_id + " " + pkmn_name)
     api_pkmn = get_pkmn_from_pokeapi(pkmn_id,lang_id,pkmn_lang_name, pkmn_list,language_name)
-    out = f"Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities}"
+    out = f"Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
 
     #return api_pkmn
     #out = get_pkmn_from_pokeapi(pkmn_id)
