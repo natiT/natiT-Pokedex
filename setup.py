@@ -7,5 +7,5 @@ setup(
    author='natiT',
    author_email='-',
    packages= find_packages(),  #same as name
-   install_requires=['pandas', 'urllib3', 'fastapi'], #external packages as dependencies
+   install_requires=['pandas', 'urllib3', 'fastapi',"cachetools", "uvicorn"], #external packages as dependencies
 )

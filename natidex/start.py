@@ -1,10 +1,12 @@
 
 #MODULES
-from sys import api_version
 import pandas
 import uvicorn
-
 from unicodedata import name
+#---- cache maybe?
+
+
+
 #FUNCTIONS
 from natidex.functions.functions import get_pkmnid_and_pkmnname_from_string
 from natidex.functions.functions import get_pkmn_from_pokeapi
@@ -43,6 +45,5 @@ async def read_pokemon(pokemon):
     #return api_pkmn
     #out = get_pkmn_from_pokeapi(pkmn_id)
     return out
-#print(__name__)
 if __name__ == "__main__":
     uvicorn.run(app,host="0.0.0.0", port=443)

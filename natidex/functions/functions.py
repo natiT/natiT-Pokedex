@@ -4,6 +4,9 @@ import requests
 from collections import namedtuple
 from natidex.classes.classes import pokemon
 import json
+from cachetools import cached, TTLCache
+
+ONE_DAY = 60 * 60 * 24
 
 
 def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
@@ -35,7 +38,7 @@ def get_from_pokeapi(endpoint, value):
         return "error"
     return pokeapipkmn.json()
 
-
+#@cached(cache=TTLCache(maxsize=10,ttl=ONE_DAY))
 def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
     api_return = get_from_pokeapi("pokemon", pkmn)
     # jsondata = json.loads(data)
@@ -65,9 +68,10 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
     api_return['abilities'] = ' | '.join(lang_abilities)
 
     lang_stats = []
-    i = 0
+
     for stat in api_return['stats']:
-        temp_stat_lang = get_stats_lang_from_pokeapi(stat['stat']['name'], lang_name)
+        temp_stat_lang = get_stats_lang_from_pokeapi(
+            stat['stat']['name'], lang_name)
         return_stat = f"{temp_stat_lang}: " + str(stat["base_stat"])
         lang_stats.append(return_stat)
 
