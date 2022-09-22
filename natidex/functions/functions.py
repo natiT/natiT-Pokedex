@@ -2,7 +2,7 @@
 from this import d
 import requests
 from collections import namedtuple
-from natidex.classes.classes import pokemon
+from classes.natidex import pokemon
 import json
 from cachetools import cached, TTLCache
 
@@ -38,7 +38,7 @@ def get_from_pokeapi(endpoint, value):
         return "error"
     return pokeapipkmn.json()
 
-#@cached(cache=TTLCache(maxsize=10,ttl=ONE_DAY))
+@cached(cache=TTLCache(maxsize=10,ttl=ONE_DAY))
 def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
     api_return = get_from_pokeapi("pokemon", pkmn)
     # jsondata = json.loads(data)
