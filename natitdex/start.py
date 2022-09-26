@@ -40,25 +40,22 @@ def main():
 
         if (language_name == "error"):
             return "The Language ID in the Script was not correct. Error can only be resolved by the hoster"
-        if (pokemon.isnumeric() == True):
-            pkmn_lang_name = pokemon
-            pkmn_id = pokemon
-        else:
-            pkmn_lang_name = get_pkmnid_and_pkmnname_from_string(
-                pkmn_list, pokemon, lang_id)
-            if isinstance(pkmn_lang_name, pandas.DataFrame):
-                print("hallo ich bin ein dataframe")
-                pkmn_id = pkmn_lang_name['pokemon_species_id'].to_string(
-                    index=False)
-                api_pkmn = get_pkmn_from_pokeapi(
-                    pkmn_id, lang_id, pkmn_lang_name, pkmn_list, language_name)
-                out = f"Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
-                return out
-            else:
-                out = f"{pokemon} not exist in Database"
-                return out
 
-        # return api_pkmn
-        # out = get_pkmn_from_pokeapi(pkmn_id)
-        
+        else:
+            if (pokemon.isnumeric() == True):
+                pkmn_lang_name = pokemon
+                pkmn_id = pokemon
+            else:
+                pkmn_lang_name = get_pkmnid_and_pkmnname_from_string(
+                    pkmn_list, pokemon, lang_id)
+                if isinstance(pkmn_lang_name, pandas.DataFrame):
+                    print("hallo ich bin ein dataframe")
+                    pkmn_id = pkmn_lang_name['pokemon_species_id'].to_string(
+                        index=False)
+                else:
+                    out = f"{pokemon} not exist in Database"
+            api_pkmn = get_pkmn_from_pokeapi(
+                pkmn_id, lang_id, pkmn_lang_name, pkmn_list, language_name)
+            out = f"Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
+            return out
     uvicorn.run(app, host="0.0.0.0", port=PORT)
