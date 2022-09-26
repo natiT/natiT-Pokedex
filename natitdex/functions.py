@@ -18,7 +18,7 @@ def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
             localized_pkmn = (allpokemon.loc[allpokemon.local_language_id == langid, [
                 "pokemon_species_id", "name", ]])
             return localized_pkmn
-
+    return "none"
 @cached(cache= TTLCache(maxsize= 20, ttl = ONE_DAY))
 def get_from_pokeapi(endpoint, value):
     try:

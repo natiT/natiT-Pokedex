@@ -34,6 +34,8 @@ def main():
         pokemon = pokemon.replace("!dex ",'')
         print(pokemon)
         language_name = get_lang_name_from_id(lang_id)
+        if(language_name == 'none'):
+            return f"{pokemon} not exist in Database"
         if (language_name == "error"):
             return "The Language ID in the Script was not correct. Error can only be resolved by the hoster"
         if (pokemon.isnumeric() == True):
