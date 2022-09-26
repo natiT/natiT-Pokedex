@@ -2,6 +2,7 @@
 import pandas
 import uvicorn
 from unicodedata import name
+from cachetools import cached, TTLCache
 # ---- cache maybe?
 
 
@@ -15,6 +16,9 @@ from natitdex.classes import api_output
 
 
 # Variables
+ONE_DAY = 60 * 60 * 24
+
+
 def main():
     world_name_list = "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_species_names.csv"
     csv_name_list = pandas.read_csv(world_name_list)
@@ -27,6 +31,7 @@ def main():
 
     @app.get("/dex/{pokemon}")
     async def read_pokemon(pokemon):
+        print(pokemon)
         language_name = get_lang_name_from_id(lang_id)
         if (language_name == "error"):
             return "The Language ID in the Script was not correct. Error can only be resolved by the hoster"
@@ -45,6 +50,4 @@ def main():
         # return api_pkmn
         # out = get_pkmn_from_pokeapi(pkmn_id)
         return out
-
-
     uvicorn.run(app, host="0.0.0.0", port=443)

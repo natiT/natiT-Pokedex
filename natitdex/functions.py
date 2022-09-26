@@ -7,7 +7,7 @@ from cachetools import cached, TTLCache
 
 ONE_DAY = 60 * 60 * 24
 
-
+#@cached(cache= TTLCache(maxsize= 5, ttl = ONE_DAY))
 def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
     for row in pkmn_list.index:
         entry = pkmn_list["name"][row]
@@ -19,10 +19,11 @@ def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
                 "pokemon_species_id", "name", ]])
             return localized_pkmn
 
-
+@cached(cache= TTLCache(maxsize= 20, ttl = ONE_DAY))
 def get_from_pokeapi(endpoint, value):
     try:
         # print(value)
+        print("Lese von der pokeAPI!")
         pokeapipkmn = requests.get(
             f"https://pokeapi.co/api/v2/{endpoint}/{value}")
         # print(pokeapipkmn)
@@ -37,8 +38,9 @@ def get_from_pokeapi(endpoint, value):
         return "error"
     return pokeapipkmn.json()
 
-
+#@cached(cache= TTLCache(maxsize= 5, ttl = ONE_DAY))
 def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
+    
     api_return = get_from_pokeapi("pokemon", pkmn)
     # jsondata = json.loads(data)
     if (api_return == "error"):
@@ -63,7 +65,7 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         lang_abilities.append(get_ability_lang_from_pokeapi(
             ability['ability']['name'], lang_name))
     api_return['abilities'] = ' | '.join(lang_abilities)
-
+    
     lang_stats = []
 
     for stat in api_return['stats']:
@@ -83,7 +85,7 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         api_return['stats'])
     return pkmn_class
 
-
+@cached(cache= TTLCache(maxsize= 50, ttl = ONE_DAY))
 def get_type_lang_from_pokeapi(type, langname):
     type_langs = get_from_pokeapi("type", type)
     for name in type_langs['names']:
@@ -91,7 +93,7 @@ def get_type_lang_from_pokeapi(type, langname):
             temp = name['name']
             return (temp)
 
-
+@cached(cache= TTLCache(maxsize= 50, ttl = ONE_DAY))
 def get_ability_lang_from_pokeapi(ability, langname):
     ability_langs = get_from_pokeapi("ability", ability)
     for name in ability_langs['names']:
@@ -99,7 +101,7 @@ def get_ability_lang_from_pokeapi(ability, langname):
             temp = name['name']
             return (temp)
 
-
+@cached(cache= TTLCache(maxsize= 50, ttl = ONE_DAY))
 def get_stats_lang_from_pokeapi(stat, langname):
     stat_langs = get_from_pokeapi("stat", stat)
     for name in stat_langs['names']:
@@ -107,10 +109,10 @@ def get_stats_lang_from_pokeapi(stat, langname):
             temp = name['name']
             return (temp)
 
-
+@cached(cache= TTLCache(maxsize= 50, ttl = ONE_DAY))
 def get_lang_name_from_id(id):
     lang_name = get_from_pokeapi("language", id)
     if (lang_name == "error"):
         return "error"
-    # print(lang_name['name'])
+    print(lang_name['name'])
     return lang_name['name']
