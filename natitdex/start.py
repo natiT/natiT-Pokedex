@@ -31,6 +31,7 @@ def main():
 
     @app.get("/dex/{pokemon}")
     async def read_pokemon(pokemon):
+        pokemon = pokemon.replace("!dex ",'')
         print(pokemon)
         language_name = get_lang_name_from_id(lang_id)
         if (language_name == "error"):
