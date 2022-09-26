@@ -53,11 +53,12 @@ def main():
                 api_pkmn = get_pkmn_from_pokeapi(
                     pkmn_id, lang_id, pkmn_lang_name, pkmn_list, language_name)
                 out = f"Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
+                return out
             else:
                 out = f"{pokemon} not exist in Database"
                 return out
 
         # return api_pkmn
         # out = get_pkmn_from_pokeapi(pkmn_id)
-        return out
+        
     uvicorn.run(app, host="0.0.0.0", port=PORT)
