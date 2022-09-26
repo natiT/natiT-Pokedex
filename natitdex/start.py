@@ -17,7 +17,7 @@ from natitdex.classes import api_output
 
 # Variables
 ONE_DAY = 60 * 60 * 24
-
+PORT = 80
 
 def main():
     world_name_list = "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_species_names.csv"
@@ -53,4 +53,4 @@ def main():
         # return api_pkmn
         # out = get_pkmn_from_pokeapi(pkmn_id)
         return out
-    uvicorn.run(app, host="0.0.0.0", port=443)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
