@@ -1,11 +1,19 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+from setuptools import find_packages
 
 setup(
-   name='natiTs_Twitch_Pokedex',
-   version='1.0',
-   description='Pokedex Command for Twitch',
-   author='natiT',
-   author_email='-',
-   packages= find_packages(),  #same as name
-   install_requires=['pandas', 'urllib3', 'fastapi',"cachetools", "uvicorn"], #external packages as dependencies
+    name='natitdex',
+    version='1.0.0',
+    description='Python Module for Twitch Command API. Leverage data from pokeapi.com',
+    author='natiT',
+    author_email='info@natit.de',
+    url='github.com',
+
+    packages=find_packages(exclude=('test*')),
+    entry_points={
+        'console_scripts': [
+            'natidex = natitdex.main:main'
+        ]
+    },
+    install_requires=['pandas', 'urllib3', 'fastapi',"cachetools", "uvicorn","requests"]
 )
