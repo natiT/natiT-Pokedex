@@ -15,5 +15,5 @@ setup(
             'natidex = natitdex.main:main'
         ]
     },
-    install_requires=['pandas', 'urllib3', 'fastapi',"cachetools", "uvicorn"]
+    install_requires=['pandas', 'urllib3', 'fastapi',"cachetools", "uvicorn","requests"]
 )
