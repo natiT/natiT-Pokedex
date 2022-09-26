@@ -1,8 +1,7 @@
-
 from this import d
 import requests
 from collections import namedtuple
-from natidex.classes.classes import pokemon
+from natitdex.classes import pokemon
 import json
 from cachetools import cached, TTLCache
 
@@ -17,7 +16,7 @@ def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
             allpokemon = pkmn_list.loc[pkmn_list.pokemon_species_id == pkmn_id, :].copy(
             )
             localized_pkmn = (allpokemon.loc[allpokemon.local_language_id == langid, [
-                              "pokemon_species_id", "name", ]])
+                "pokemon_species_id", "name", ]])
             return localized_pkmn
 
 
@@ -38,6 +37,7 @@ def get_from_pokeapi(endpoint, value):
         return "error"
     return pokeapipkmn.json()
 
+
 def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
     api_return = get_from_pokeapi("pokemon", pkmn)
     # jsondata = json.loads(data)
@@ -54,14 +54,12 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         api_return['name'] = pkmn_local_name
     lang_types = []
     for type in api_return['types']:
-
         lang_types.append(get_type_lang_from_pokeapi(
             type['type']['name'], lang_name))
     api_return['types'] = ' | '.join(lang_types)
 
     lang_abilities = []
     for ability in api_return['abilities']:
-
         lang_abilities.append(get_ability_lang_from_pokeapi(
             ability['ability']['name'], lang_name))
     api_return['abilities'] = ' | '.join(lang_abilities)
