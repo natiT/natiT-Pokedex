@@ -47,6 +47,7 @@ def main():
             pkmn_lang_name = get_pkmnid_and_pkmnname_from_string(
                 pkmn_list, pokemon, lang_id)
             if isinstance(pkmn_lang_name, pandas.DataFrame):
+                print("hallo ich bin ein dataframe")
                 pkmn_id = pkmn_lang_name['pokemon_species_id'].to_string(
                     index=False)
                 api_pkmn = get_pkmn_from_pokeapi(
