@@ -54,7 +54,8 @@ def main():
                     pkmn_id, lang_id, pkmn_lang_name, pkmn_list, language_name)
                 out = f"Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
             else:
-                return f"{pokemon} not exist in Database"
+                out = f"{pokemon} not exist in Database"
+                return out
 
         # return api_pkmn
         # out = get_pkmn_from_pokeapi(pkmn_id)
