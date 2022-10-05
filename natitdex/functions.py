@@ -7,8 +7,32 @@ from cachetools import cached, TTLCache
 
 ONE_DAY = 60 * 60 * 24
 
-#@cached(cache= TTLCache(maxsize= 5, ttl = ONE_DAY))
+
+
+
+    # @cached(cache= TTLCache(maxsize= 5, ttl = ONE_DAY))
+
+
 def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
+    array = []
+    for entry in pkmn_list:
+        if entry['name'].casefold() == pkmn_name.casefold():
+            print(entry)
+            return entry
+
+
+
+    #regEx = f'(https:\/\/pokeapi.co\/api\/v2\/language\/{langid})'
+    #result = [x for x in pkmn_list if x["name"].casefold()==pkmn_name.casefold()]
+    # for item in pkmn_list:
+    #    if(item["name"].casefold() == pkmn_name.casefold()):
+    #        pkmn_id = item['pokemon_species_id']
+    #tempjson = json.loads(result)
+    # array.append(tempjson["pokemon_species_id"])
+    # array.append(tempjson["name"])
+    # return array
+""" def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
+    array = []
     for row in pkmn_list.index:
         entry = pkmn_list["name"][row]
         if (entry.casefold() == pkmn_name.casefold()):
@@ -17,9 +41,14 @@ def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
             )
             localized_pkmn = (allpokemon.loc[allpokemon.local_language_id == langid, [
                 "pokemon_species_id", "name", ]])
-            return localized_pkmn
-    return "none"
-@cached(cache= TTLCache(maxsize= 20, ttl = ONE_DAY))
+            array.append(localized_pkmn['pokemon_species_id'].to_string(
+                        index=False))
+            array.append(localized_pkmn['name'].to_string(
+                        index=False))
+            return tuple(array)
+    return "none" """
+
+
 def get_from_pokeapi(endpoint, value):
     try:
         # print(value)
@@ -38,9 +67,10 @@ def get_from_pokeapi(endpoint, value):
         return "error"
     return pokeapipkmn.json()
 
-#@cached(cache= TTLCache(maxsize= 5, ttl = ONE_DAY))
+# @cached(cache= TTLCache(maxsize= 100, ttl = ONE_DAY))
+
+
 def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
-    
     api_return = get_from_pokeapi("pokemon", pkmn)
     # jsondata = json.loads(data)
     if (api_return == "error"):
@@ -49,11 +79,14 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
     if (pkmn.isnumeric() == True):
         pkmn_localize = get_pkmnid_and_pkmnname_from_string(
             pkmn_list, api_return['name'], lang_id)
-        pkmn_local_name = pkmn_localize['name'].to_string(index=False)
+        if not pkmn_localize:
+            out = f"{pokemon} not exist in Database"
+        else:
+            pkmn_local_name = pkmn_localize[1]
         api_return['name'] = pkmn_local_name
-        # pkmn_types = []
     else:
         api_return['name'] = pkmn_local_name
+
     lang_types = []
     for type in api_return['types']:
         lang_types.append(get_type_lang_from_pokeapi(
@@ -65,9 +98,8 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         lang_abilities.append(get_ability_lang_from_pokeapi(
             ability['ability']['name'], lang_name))
     api_return['abilities'] = ' | '.join(lang_abilities)
-    
-    lang_stats = []
 
+    lang_stats = []
     for stat in api_return['stats']:
         temp_stat_lang = get_stats_lang_from_pokeapi(
             stat['stat']['name'], lang_name)
@@ -85,7 +117,7 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         api_return['stats'])
     return pkmn_class
 
-@cached(cache= TTLCache(maxsize= 50, ttl = ONE_DAY))
+
 def get_type_lang_from_pokeapi(type, langname):
     type_langs = get_from_pokeapi("type", type)
     for name in type_langs['names']:
@@ -93,7 +125,7 @@ def get_type_lang_from_pokeapi(type, langname):
             temp = name['name']
             return (temp)
 
-@cached(cache= TTLCache(maxsize= 50, ttl = ONE_DAY))
+
 def get_ability_lang_from_pokeapi(ability, langname):
     ability_langs = get_from_pokeapi("ability", ability)
     for name in ability_langs['names']:
@@ -101,7 +133,7 @@ def get_ability_lang_from_pokeapi(ability, langname):
             temp = name['name']
             return (temp)
 
-@cached(cache= TTLCache(maxsize= 50, ttl = ONE_DAY))
+
 def get_stats_lang_from_pokeapi(stat, langname):
     stat_langs = get_from_pokeapi("stat", stat)
     for name in stat_langs['names']:
@@ -109,7 +141,9 @@ def get_stats_lang_from_pokeapi(stat, langname):
             temp = name['name']
             return (temp)
 
-@cached(cache= TTLCache(maxsize= 50, ttl = ONE_DAY))
+# @cached(cache= TTLCache(maxsize= 5, ttl = ONE_DAY))
+
+
 def get_lang_name_from_id(id):
     lang_name = get_from_pokeapi("language", id)
     if (lang_name == "error"):
