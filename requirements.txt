@@ -1,5 +1,5 @@
 pandas
-urllib3 
+urllib3
 fastapi
-cachetools 
+cachetools
 uvicorn
