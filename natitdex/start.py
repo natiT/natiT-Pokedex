@@ -19,9 +19,13 @@ from natitdex.classes import api_output
 
 # Variables
 ONE_DAY = 60 * 60 * 24
-for item in os.environ:
-    print(item + ": " + os.environ[item])
-PORT = int(os.environ['PORT'])
+if "PORT" in os.environ:
+    PORT = int(os.environ['PORT'])
+else:
+    print("no systemvariable PORT use Default Port: 49152")
+    PORT = 49152
+
+
 world_name_list = "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_species_names.csv"
 #request_json = urlopen('https://natit.de/files/lang_list_minify.json')
 #print(request_json.json())
