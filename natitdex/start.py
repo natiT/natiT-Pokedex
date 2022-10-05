@@ -5,6 +5,7 @@ from unicodedata import name
 from cachetools import cached, TTLCache
 from urllib.request import urlopen
 import os
+import emoji
 # ---- cache maybe?
 
 
@@ -25,6 +26,8 @@ else:
     print("no systemvariable PORT use Default Port: 49152")
     PORT = 49152
 
+#Emojis
+laptop = emoji.emojize(":laptop:")
 
 world_name_list = "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_species_names.csv"
 #request_json = urlopen('https://natit.de/files/lang_list_minify.json')
@@ -67,6 +70,7 @@ def main():
 
             api_pkmn = get_pkmn_from_pokeapi(
                 pkmn_id, lang_id, pkmn_lang_name, csv_string, language_name)
-            out = f"Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
+            print(emoji.demojize("💻"))
+            out = f"{laptop} Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
             return out
     uvicorn.run(app, host="0.0.0.0", port=PORT)
