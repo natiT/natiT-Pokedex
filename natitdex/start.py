@@ -28,7 +28,8 @@ else:
 
 #Emojis
 laptop = emoji.emojize(":laptop:")
-
+shield = emoji.emojize(":shield:")
+red_heart = emoji.emojize(":red_heart:")
 world_name_list = "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_species_names.csv"
 #request_json = urlopen('https://natit.de/files/lang_list_minify.json')
 #print(request_json.json())
@@ -36,9 +37,10 @@ world_name_list = "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data
 csv_name_list = pandas.read_csv(world_name_list)
 csv_string = csv_name_list.to_csv(index=False)
 lang_id = 6
+
 # pkmn_list = csv_name_list[[
 #    "pokemon_species_id", "local_language_id", "name"]]
-
+#pkmn_id = "empty"
 
 def main():
 
@@ -49,6 +51,9 @@ def main():
     @app.get("/dex/{pokemon}", response_class=PlainTextResponse)
     async def read_pokemon(pokemon):
         pokemon = pokemon.replace("!dex ", '')
+        if pokemon.lower() == "tongo":
+            out = f"{laptop} Pokedex Eintrag für Tongo - Typ: Entwickler - Fähigkeiten: Sarkasmus - Basiswerte: ITS OVER 9000"
+            return out
         #print(pokemon)
         language_name = get_lang_name_from_id(lang_id)
 
@@ -62,15 +67,18 @@ def main():
             else:
                 temp_outlangpkmn = get_pkmnid_and_pkmnname_from_string(
                     csv_string, pokemon, lang_id)
-                if not temp_outlangpkmn:
+                if (temp_outlangpkmn == "none"):
                     out = f"{pokemon} not exist in Database"
+                    return out
                 else:
                     pkmn_id = temp_outlangpkmn[0]
                     pkmn_lang_name = temp_outlangpkmn[1]
 
             api_pkmn = get_pkmn_from_pokeapi(
                 pkmn_id, lang_id, pkmn_lang_name, csv_string, language_name)
-            print(emoji.demojize("💻"))
+            if(api_pkmn == "error"):
+                out = f"{pokemon} not exist in Database"
+                return out
             out = f"{laptop} Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
             return out
     uvicorn.run(app, host="0.0.0.0", port=PORT)

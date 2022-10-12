@@ -7,8 +7,8 @@ setup(
     description='Python Module for Twitch Command API. Leverage data from pokeapi.com',
     author='natiT',
     author_email='info@natit.de',
-    url='github.com',
-
+    url='https://github.com/natiT/natiT-Pokedex',
+    license='MIT',
     packages=find_packages(exclude=('test*')),
     entry_points={
         'console_scripts': [
