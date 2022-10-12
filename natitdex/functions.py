@@ -34,7 +34,7 @@ def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
 def get_from_pokeapi(endpoint, value):
     try:
         # print(value)
-        # print("Zeile 35 : Lese von der pokeAPI!")
+        print("Zeile 35 : Lese von der pokeAPI!")
         pokeapipkmn = requests.get(
             f"https://pokeapi.co/api/v2/{endpoint}/{value}")
         # print(pokeapipkmn)
@@ -50,7 +50,7 @@ def get_from_pokeapi(endpoint, value):
     return pokeapipkmn.json()
 
 
-@cached(cache=TTLCache(maxsize=100, ttl=ONE_DAY))
+#@cached(cache=TTLCache(maxsize=100, ttl=ONE_DAY))
 def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
     api_return = get_from_pokeapi("pokemon", pkmn)
     # print("Zeile 55 : " + str(type(api_return)))
@@ -96,6 +96,7 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         api_return['stats'] = ' | '.join(lang_stats)
         all_flavor_stats = get_flavor_text_from_id(
             api_return['species']["name"], lang_name)
+        print(all_flavor_stats)
         api_return['flavortext'] = random.choice(all_flavor_stats)
     pkmn_class = pokemon(
         api_return['id'],
@@ -140,6 +141,7 @@ def get_lang_name_from_id(id):
         return "error"
     return lang_name['name']
 
+#@ cached(cache = TTLCache(maxsize=10, ttl=ONE_DAY))
 def get_flavor_text_from_id(name, langname):
     flavor_texts=[]
     pkmn_species=get_from_pokeapi("pokemon-species", name)
