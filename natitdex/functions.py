@@ -1,4 +1,5 @@
 from io import StringIO
+import random
 from this import d
 import requests
 from collections import namedtuple
@@ -9,9 +10,7 @@ import pandas
 ONE_DAY = 60 * 60 * 24
 
 
-
-
-@cached(cache= TTLCache(maxsize= 10, ttl = ONE_DAY))
+@cached(cache=TTLCache(maxsize=10, ttl=ONE_DAY))
 def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
     dataframe = pandas.read_csv(StringIO(pkmn_list))
     array = []
@@ -30,11 +29,12 @@ def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
             return array
     return "none"
 
-@cached(cache= TTLCache(maxsize= 5, ttl = ONE_DAY))
+
+@cached(cache=TTLCache(maxsize=5, ttl=ONE_DAY))
 def get_from_pokeapi(endpoint, value):
     try:
         # print(value)
-        #print("Zeile 35 : Lese von der pokeAPI!")
+        # print("Zeile 35 : Lese von der pokeAPI!")
         pokeapipkmn = requests.get(
             f"https://pokeapi.co/api/v2/{endpoint}/{value}")
         # print(pokeapipkmn)
@@ -49,10 +49,11 @@ def get_from_pokeapi(endpoint, value):
         return "error"
     return pokeapipkmn.json()
 
-@cached(cache= TTLCache(maxsize= 100, ttl = ONE_DAY))
+
+@cached(cache=TTLCache(maxsize=100, ttl=ONE_DAY))
 def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
     api_return = get_from_pokeapi("pokemon", pkmn)
-    #print("Zeile 55 : " + str(type(api_return)))
+    # print("Zeile 55 : " + str(type(api_return)))
     tempclass = api_return
     # jsondata = json.loads(data)
     if (api_return == "error"):
@@ -70,13 +71,13 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         api_return['name'] = pkmn_local_name
 
     lang_types = []
-    #print("Zeile 73 : " + str(api_return['types']))
-    if not isinstance(api_return['types'],str):
+    # print("Zeile 73 : " + str(api_return['types']))
+    if not isinstance(api_return['types'], str):
 
         for ttype in api_return['types']:
-            #print("Zeile 77 : " + str(type(ttype)))
+            # print("Zeile 77 : " + str(type(ttype)))
             lang_types.append(get_type_lang_from_pokeapi(
-            ttype['type']['name'] , lang_name))
+            ttype['type']['name'], lang_name))
         api_return['types'] = ' | '.join(lang_types)
 
         lang_abilities = []
@@ -93,45 +94,57 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
             lang_stats.append(return_stat)
 
         api_return['stats'] = ' | '.join(lang_stats)
-
+        all_flavor_stats = get_flavor_text_from_id(
+            api_return['species']["name"], lang_name)
+        api_return['flavortext'] = random.choice(all_flavor_stats)
     pkmn_class = pokemon(
         api_return['id'],
         api_return['name'],
         api_return['types'],
         api_return['abilities'],
         api_return['species']['name'],
-        api_return['stats'])
+        api_return['stats'],
+        api_return['flavortext'])
     return pkmn_class
 
-@cached(cache= TTLCache(maxsize= 20, ttl = ONE_DAY))
+@ cached(cache = TTLCache(maxsize=20, ttl=ONE_DAY))
 def get_type_lang_from_pokeapi(type, langname):
-    type_langs = get_from_pokeapi("type", type)
+    type_langs=get_from_pokeapi("type", type)
     for name in type_langs['names']:
         if name['language']['name'] == langname:
-            temp = name['name']
+            temp=name['name']
             return (temp)
 
-@cached(cache= TTLCache(maxsize= 20, ttl = ONE_DAY))
+@ cached(cache = TTLCache(maxsize=20, ttl=ONE_DAY))
 def get_ability_lang_from_pokeapi(ability, langname):
-    ability_langs = get_from_pokeapi("ability", ability)
+    ability_langs=get_from_pokeapi("ability", ability)
     for name in ability_langs['names']:
         if name['language']['name'] == langname:
-            temp = name['name']
+            temp=name['name']
             return (temp)
 
-@cached(cache= TTLCache(maxsize= 10, ttl = ONE_DAY))
+@ cached(cache = TTLCache(maxsize=10, ttl=ONE_DAY))
 def get_stats_lang_from_pokeapi(stat, langname):
-    stat_langs = get_from_pokeapi("stat", stat)
+    stat_langs=get_from_pokeapi("stat", stat)
     for name in stat_langs['names']:
         if name['language']['name'] == langname:
-            temp = name['name']
+            temp=name['name']
             return (temp)
 
 # @cached(cache= TTLCache(maxsize= 5, ttl = ONE_DAY))
 
-@cached(cache= TTLCache(maxsize= 20, ttl = ONE_DAY))
+@ cached(cache = TTLCache(maxsize=20, ttl=ONE_DAY))
 def get_lang_name_from_id(id):
-    lang_name = get_from_pokeapi("language", id)
+    lang_name=get_from_pokeapi("language", id)
     if (lang_name == "error"):
         return "error"
     return lang_name['name']
+
+def get_flavor_text_from_id(name, langname):
+    flavor_texts=[]
+    pkmn_species=get_from_pokeapi("pokemon-species", name)
+    for entry in pkmn_species['flavor_text_entries']:
+        if entry['language']['name'] == langname:
+            temp_string = entry["flavor_text"].replace('\n',' ')
+            flavor_texts.append(temp_string)
+    return flavor_texts

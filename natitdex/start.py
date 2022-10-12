@@ -79,6 +79,6 @@ def main():
             if(api_pkmn == "error"):
                 out = f"{pokemon} not exist in Database"
                 return out
-            out = f"{laptop} Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats}"
+            out = f"{laptop} Pokedex Eintrag für {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats} - {api_pkmn.flavortext}"
             return out
     uvicorn.run(app, host="0.0.0.0", port=PORT)
