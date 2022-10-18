@@ -15,13 +15,13 @@ import logging as log
 #from pathlib import Path
 
 
-logfile = os.getenv("LOG") + '\\natitex.log'
-log.basicConfig(filename=logfile, filemode='a+', level=log.INFO,
-                format='%(name)s - %(levelname)s - %(message)s')
-logfilesize = os.stat(logfile).st_size
-if logfilesize > 50000000:
-    os.remove(logfile)
-    log.info("Deleted Old file cause exceed 50 Megabytes")
+# logfile = os.getenv("LOG") + '\\natitex.log'
+# log.basicConfig(filename=logfile, filemode='a+', level=log.INFO,
+#                 format='%(name)s - %(levelname)s - %(message)s')
+# logfilesize = os.stat(logfile).st_size
+# if logfilesize > 50000000:
+#     os.remove(logfile)
+#     log.info("Deleted Old file cause exceed 50 Megabytes")
 # print(logfile)
 # logging config
 
@@ -61,7 +61,7 @@ def main():
     @app.get("/dex/{pokemon}", response_class=PlainTextResponse)
     async def read_pokemon(pokemon):
         pokemon = pokemon.replace("!dex ", '')
-        log.info(pokemon)
+        #log.info(pokemon)
         if pokemon.lower() == "tongo":
             out = f"{laptop} Pokedex Eintrag für Tongo - Typ: Entwickler - Fähigkeiten: Sarkasmus - Basiswerte: ITS OVER 9000"
             return out
