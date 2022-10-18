@@ -1,4 +1,5 @@
 from io import StringIO
+import platform
 import random
 from this import d
 import requests
@@ -9,7 +10,14 @@ import pandas
 import logging as log
 import os
 
-logfile = os.getenv("LOG") + '\\natitex.log'
+os_name = platform.system()
+logfile = os.getenv("LOG") + '\\natitdex.log'
+if not logfile:
+    match os_name.casefold:
+        case "linux":
+            logfile = "/tmp/natitdex.log"
+        case "windows":
+            logfile = "C:\\temp\\natitdex.log"
 log.basicConfig(filename=logfile, filemode='a+', level=log.INFO,
                 format='%(name)s - %(levelname)s - %(message)s')
 ONE_DAY = 60 * 60 * 24
