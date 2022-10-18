@@ -11,28 +11,13 @@ from cachetools import cached, TTLCache
 from urllib.request import urlopen
 import os
 import emoji
-import logging as log
-#from pathlib import Path
-
-
-# logfile = os.getenv("LOG") + '\\natitex.log'
-# log.basicConfig(filename=logfile, filemode='a+', level=log.INFO,
-#                 format='%(name)s - %(levelname)s - %(message)s')
-# logfilesize = os.stat(logfile).st_size
-# if logfilesize > 50000000:
-#     os.remove(logfile)
-#     log.info("Deleted Old file cause exceed 50 Megabytes")
-# print(logfile)
-# logging config
-
-
 
 # Variables
 ONE_DAY = 60 * 60 * 24
 if "PORT" in os.environ:
     PORT = int(os.environ['PORT'])
 else:
-    log.warning("no systemvariable PORT use Default Port: 49152")
+    print("no systemvariable PORT use Default Port: 49152")
     PORT = 49152
 
 # Emojis
@@ -61,7 +46,7 @@ def main():
     @app.get("/dex/{pokemon}", response_class=PlainTextResponse)
     async def read_pokemon(pokemon):
         pokemon = pokemon.replace("!dex ", '')
-        #log.info(pokemon)
+        print(pokemon)
         if pokemon.lower() == "tongo":
             out = f"{laptop} Pokedex Eintrag für Tongo - Typ: Entwickler - Fähigkeiten: Sarkasmus - Basiswerte: ITS OVER 9000"
             return out
