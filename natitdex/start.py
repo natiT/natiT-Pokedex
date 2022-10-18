@@ -51,10 +51,11 @@ def main():
     @app.get("/dex/{pokemon}", response_class=PlainTextResponse)
     async def read_pokemon(pokemon):
         pokemon = pokemon.replace("!dex ", '')
+        print(pokemon)
         if pokemon.lower() == "tongo":
             out = f"{laptop} Pokedex Eintrag für Tongo - Typ: Entwickler - Fähigkeiten: Sarkasmus - Basiswerte: ITS OVER 9000"
             return out
-        #print(pokemon)
+        
         language_name = get_lang_name_from_id(lang_id)
 
         if (language_name == "error"):
@@ -81,4 +82,5 @@ def main():
                 return out
             out = f"{laptop} Pokedex Eintrag mit ID {api_pkmn.id}: {api_pkmn.name} - Typ: {api_pkmn.types} - Fähigkeiten: {api_pkmn.abilities} - Basiswerte: {api_pkmn.stats} - {api_pkmn.flavortext}"
             return out
+    
     uvicorn.run(app, host="0.0.0.0", port=PORT)
