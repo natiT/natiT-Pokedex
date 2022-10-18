@@ -6,7 +6,12 @@ from collections import namedtuple
 from natitdex.classes import pokemon
 from cachetools import cached, TTLCache
 import pandas
+import logging as log
+import os
 
+logfile = os.getenv("LOG") + '\\natitex.log'
+log.basicConfig(filename=logfile, filemode='a+', level=log.INFO,
+                format='%(name)s - %(levelname)s - %(message)s')
 ONE_DAY = 60 * 60 * 24
 
 
@@ -34,7 +39,7 @@ def get_pkmnid_and_pkmnname_from_string(pkmn_list, pkmn_name, langid):
 def get_from_pokeapi(endpoint, value):
     try:
         # print(value)
-        print("Zeile 35 : Lese von der pokeAPI!")
+        #log.info("Zeile 35 : Lese von der pokeAPI!")
         pokeapipkmn = requests.get(
             f"https://pokeapi.co/api/v2/{endpoint}/{value}")
         # print(pokeapipkmn)
@@ -53,8 +58,7 @@ def get_from_pokeapi(endpoint, value):
 #@cached(cache=TTLCache(maxsize=100, ttl=ONE_DAY))
 def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
     api_return = get_from_pokeapi("pokemon", pkmn)
-    # print("Zeile 55 : " + str(type(api_return)))
-    tempclass = api_return
+    #log.info("Zeile 55 : " + str(type(api_return)))
     # jsondata = json.loads(data)
     if (api_return == "error"):
         return "error"
@@ -96,7 +100,7 @@ def get_pkmn_from_pokeapi(pkmn, lang_id, pkmn_local_name, pkmn_list, lang_name):
         api_return['stats'] = ' | '.join(lang_stats)
         all_flavor_stats = get_flavor_text_from_id(
             api_return['species']["name"], lang_name)
-        print(all_flavor_stats)
+        #print(all_flavor_stats)
         api_return['flavortext'] = random.choice(all_flavor_stats)
     pkmn_class = pokemon(
         api_return['id'],
@@ -137,6 +141,7 @@ def get_stats_lang_from_pokeapi(stat, langname):
 @ cached(cache = TTLCache(maxsize=20, ttl=ONE_DAY))
 def get_lang_name_from_id(id):
     lang_name=get_from_pokeapi("language", id)
+    #print(lang_name)
     if (lang_name == "error"):
         return "error"
     return lang_name['name']
